@@ -1,0 +1,9 @@
+project_id           = "sap-ems-systec-sandbox"
+instance_name        = "ubuntu-vm"
+machine_type         = "e2-medium"
+zone                 = "europe-west3-a"
+disk_size_gb         = 100
+ssh_user            = "ubuntu"
+ssh_public_key_path = "~/.ssh/id_ed25519.pub"
+network_tags        = ["http-server", "https-server"]
+ssh_source_ranges   = ["35.235.240.0/20"]
