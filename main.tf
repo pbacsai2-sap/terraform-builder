@@ -1,14 +1,3 @@
-resource "google_storage_bucket" "terraform_state" {
-  name          = "${var.project_id}-terraform-state"
-  location      = "EU"
-  force_destroy = true
-
-  uniform_bucket_level_access = true
-  versioning {
-    enabled = true
-  }
-}
-
 resource "google_storage_bucket" "scripts" {
   name     = "${var.project_id}-ubuntu-scripts"
   location = "EU"
