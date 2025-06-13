@@ -35,9 +35,29 @@ resource "google_compute_instance" "ubuntu_vm" {
 
   metadata_startup_script = <<-EOF
     #!/bin/bash
+    set -e
+    exec > >(tee /var/log/startup-script.log) 2>&1
+    
+    echo "Starting startup script at $(date)"
+    
+    # Install gsutil if not present
+    if ! command -v gsutil &> /dev/null; then
+      echo "Installing gsutil..."
+      apt-get update
+      apt-get install -y python3-pip
+      pip3 install gsutil
+    fi
+    
+    echo "Downloading init script from gs://${google_storage_bucket.scripts.name}/${google_storage_bucket_object.init_script.name}"
     gsutil cp gs://${google_storage_bucket.scripts.name}/${google_storage_bucket_object.init_script.name} /tmp/init-script.sh
+    
+    echo "Making init script executable"
     chmod +x /tmp/init-script.sh
+    
+    echo "Executing init script"
     /tmp/init-script.sh
+    
+    echo "Startup script completed at $(date)"
   EOF
 
   tags = var.network_tags
